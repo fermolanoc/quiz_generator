@@ -10,7 +10,8 @@ Once user has answered all the questions available in the chosen category, progr
 and save them in DB as well.
 
 """
-from ui import *
+import ui
+from db_manager import User, Category
 
 
 def main():
@@ -25,16 +26,10 @@ def main():
         print(menu_text)
         choice = input('Enter your choice: ')
         if choice == '1':
-            categories_list = display_all_categories()
+            topic = display_all_categories()
+            user_id, user_name = get_user_info()
 
-            # print(categories_list)
-            for item in categories_list:
-                print(item)
-
-            topic = input("\nChoose a topic\n")
-            while topic.capitalize() not in categories_list:
-                topic = input("\nChoose a topic\n")
-            questions_list = get_questions(topic.capitalize())
+            get_questions(user_id, user_name.user_name, topic.capitalize())
 
         # elif choice == '2':
         #     add_new_category()
@@ -51,6 +46,31 @@ def main():
             break
         else:
             print('Not a valid selection, please try again')
+
+
+def get_user_info():
+    user_name = ui.get_user_info()
+    user_id = User.find_user_by_name(user_name)
+
+    if not user_id:
+        user_id = User.create_user(user_name)
+    else:
+        print(f'{user_name.user_name} already exists')
+
+    return user_id, user_name
+
+
+def display_all_categories():
+    categories = Category.get_categories()
+
+    user_choice = ui.show_all_categories(categories)
+    return user_choice
+
+
+def get_questions(id, user_name, topic):
+    points_available, points_obtained = ui.get_questions(user_name, topic)
+
+    print(f"{user_name.title()} you obtained {points_obtained} out of {points_available}")
 
 
 main()
