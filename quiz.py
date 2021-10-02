@@ -17,51 +17,46 @@ from db_manager import User, Category
 def main():
 
     menu_text = """
-    1. Display categories
-    2. Add new category
-    3. Delete category 
-    4. Quit
+    1. Play
+    2. Quit
     """
 
     while True:
+        print("------------------------ Menu ------------------------")
         print(menu_text)
-        choice = input('Enter your choice: ')
-        if choice == '1':
-            topic = display_all_categories()
-            user_id, user_name = get_user_info()
+        print("------------------------ Menu ------------------------")
 
+        choice = input('Enter your choice number: ')
+
+        if choice == '1':
+            topic = display_all_categories()  # get topic chosen by user
+            user_id, user_name = get_user_info()  # get user basic info
+
+            # from the topic chosen by user, get questions available
             get_questions(user_id, user_name.user_name, topic.capitalize())
 
-        # elif choice == '2':
-        #     add_new_category()
-        # elif choice == '3':
-        #     results = find_player()
-
-        #     if results:
-        #         edit_existing_record(results)
-        #     else:
-        #         print(f'Player is not on our records\n')
-        # elif choice == '4':
-        #     delete_record()
-        elif choice == '4':
+        elif choice == '2':
             break
         else:
             print('Not a valid selection, please try again')
 
 
 def get_user_info():
-    user_name = ui.get_user_info()
+    user_name = ui.get_user_info()  # returns an User object
+    # user User object to find user id
     user_id = User.find_user_by_name(user_name)
 
+    # if user_id was not found, then user object is created on db
     if not user_id:
         user_id = User.create_user(user_name)
-    else:
-        print(f'{user_name.user_name} already exists')
+    else:  # if user id is found, then let user know that registration already exists
+        print(f'{user_name.user_name} you are already registered!')
 
     return user_id, user_name
 
 
 def display_all_categories():
+    # receives from DB an object with all categories
     categories = Category.get_categories()
 
     user_choice = ui.show_all_categories(categories)
@@ -69,9 +64,11 @@ def display_all_categories():
 
 
 def get_questions(user_id, user_name, topic):
+    # receive how many points user earned and total points available, user id, user name and the category the user played
     points_available, points_obtained = ui.get_questions(
         user_id, user_name, topic)
 
+    # show results to user
     print(f"{user_name.title()} you obtained {points_obtained} out of {points_available}")
 
 
