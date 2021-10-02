@@ -15,6 +15,7 @@ from db_manager import User, Category
 
 
 def main():
+
     menu_text = """
     1. Display categories
     2. Add new category
@@ -67,8 +68,9 @@ def display_all_categories():
     return user_choice
 
 
-def get_questions(id, user_name, topic):
-    points_available, points_obtained = ui.get_questions(user_name, topic)
+def get_questions(user_id, user_name, topic):
+    points_available, points_obtained = ui.get_questions(
+        user_id, user_name, topic)
 
     print(f"{user_name.title()} you obtained {points_obtained} out of {points_available}")
 

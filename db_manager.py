@@ -72,6 +72,25 @@ class Category:
 
         return all_categories
 
+    def get_topic_id(topic):
+
+        try:
+            with sqlite3.connect(db) as conn:
+                conn.row_factory = sqlite3.Row
+                cursor = conn.cursor()
+
+                topic_id = cursor.execute(
+                    f'Select id from categories where categories.name = \'{topic}\'')
+
+                for row in topic_id:
+                    questions_list = Question.get_questions(row['id'])
+                    # print(questions_list)
+                    return questions_list
+        except sqlite3.IntegrityError as e:
+            print("error")
+        finally:
+            cursor.close()
+
 
 class Question:
 
@@ -86,52 +105,89 @@ class Question:
         self.id = id
 
     def get_questions(topic_id):
-        questions = cursor.execute(
-            f'Select * from questions q inner join categories c on q.category_id = c.id where q.category_id = {topic_id}')
 
-        questions_list = []
-        for item in questions:
-            single_question = {}
-            text = item['question']
-            correct_answer_1 = item['correct_answer']
-            wrong_answer_2 = item['wrong_answer_1']
-            wrong_answer_3 = item['wrong_answer_2']
-            wrong_answer_4 = item['wrong_answer_3']
-            difficulty = item['difficulty']
+        try:
+            with sqlite3.connect(db) as conn:
+                conn.row_factory = sqlite3.Row
+                cursor = conn.cursor()
 
-            # print(text, option_1, option_2)
+                questions = cursor.execute(
+                    f'Select * from questions q inner join categories c on q.category_id = c.id where q.category_id = {topic_id}')
 
-            single_question['question'] = text,
-            single_question['answer_1'] = correct_answer_1
-            single_question['answer_2'] = wrong_answer_2
-            single_question['answer_3'] = wrong_answer_3
-            single_question['answer_4'] = wrong_answer_4
-            single_question['difficulty'] = difficulty
+                questions_list = []
+                for item in questions:
+                    single_question = {}
+                    question_id = item['id']
+                    text = item['question']
+                    correct_answer_1 = item['correct_answer']
+                    wrong_answer_2 = item['wrong_answer_1']
+                    wrong_answer_3 = item['wrong_answer_2']
+                    wrong_answer_4 = item['wrong_answer_3']
+                    difficulty = item['difficulty']
 
-            # print(single_question)
-            questions_list.append(single_question)
+                    # print(text, option_1, option_2)
+
+                    single_question['id'] = question_id
+                    single_question['question'] = text
+                    single_question['answer_1'] = correct_answer_1
+                    single_question['answer_2'] = wrong_answer_2
+                    single_question['answer_3'] = wrong_answer_3
+                    single_question['answer_4'] = wrong_answer_4
+                    single_question['difficulty'] = difficulty
+
+                    # print(single_question)
+                    questions_list.append(single_question)
+        except sqlite3.IntegrityError as e:
+            print("error")
+        finally:
+            cursor.close()
+
         # print(questions_list)
         return questions_list
 
 
-def get_topic_id(topic):
-    topic_id = cursor.execute(
-        f'Select id from categories where categories.name = \'{topic}\'')
+class Results:
 
-    for row in topic_id:
-        questions_list = Question.get_questions(row['id'])
-        # print(questions_list)
-        return questions_list
+    def __init__(self, date_quiz, user_id, question_id, score):
+        self.date_quiz = date_quiz
+        self.user_id = user_id
+        self.question_id = question_id
+        self.score = score
+
+    def save_record(timestamp, user_id, question_id, score):
+        insert_sql = 'INSERT INTO results (date_quiz, user_id, question_id, score) VALUES (?, ?, ?, ?)'
+
+        try:
+            with sqlite3.connect(db) as conn:
+                conn.row_factory = sqlite3.Row  # Upgrade row_factory
+                cursor = conn.cursor()
+
+                cursor.execute(
+                    insert_sql, (timestamp, user_id, question_id, score))
+
+        except sqlite3.IntegrityError as e:
+            print("error")
+        finally:
+            cursor.close()
 
 
 def get_points(difficulty):
-    question_points = cursor.execute(
-        f'Select * from difficulties d inner join questions q on d.id = q.difficulty where q.difficulty = {difficulty}')
 
-    for row in question_points:
-        score = row['score']
-        difficulty = row['name']
-        return difficulty, score
+    try:
+        with sqlite3.connect(db) as conn:
+            conn.row_factory = sqlite3.Row  # Upgrade row_factory
+            cursor = conn.cursor()
 
+            question_points = cursor.execute(
+                f'Select * from difficulties d inner join questions q on d.id = q.difficulty where q.difficulty = {difficulty}')
+
+            for row in question_points:
+                score = row['score']
+                difficulty = row['name']
+                return difficulty, score
+    except sqlite3.IntegrityError as e:
+        print("error")
+    finally:
+        cursor.close()
 
 # get_topic_id('Entertainment')

@@ -1,4 +1,5 @@
-from db_manager import get_topic_id, get_points, User
+from db_manager import Category, get_points, User, Results
+import time
 
 
 def get_user_info():
@@ -34,15 +35,20 @@ def choose_category(list):
     return topic
 
 
-def get_questions(user, topic):
+def get_questions(user_id, user, topic):
 
+    timestamp = 0
     total_points_available = 0
     total_points_obtained = 0
 
-    questions_list = get_topic_id(topic)
+    questions_list = Category.get_topic_id(topic)
 
     print(f"\nQUESTIONS: \nOk {user} here are the questions:\n")
     for question in questions_list:
+        question_id = question['id']
+        timestamp = time.time()
+        question_points_obtained = 0
+
         difficulty, points_available = get_points(question['difficulty'])
         print(
             f"Difficulty: {difficulty}\tPoints available: {points_available}")
@@ -64,10 +70,14 @@ def get_questions(user, topic):
             user_answer_value = question[f'answer_{user_answer}']
             print(user_answer_value)
             if user_answer_value == question['answer_1']:
+                question_points_obtained = points_available
                 total_points_obtained += points_available
                 print("Correct\n\n")
             else:
                 print("Wrong\n\n")
+
+            Results.save_record(
+                timestamp, user_id, question_id, question_points_obtained)
 
         except ValueError as err:
             user_answer = input("\nAnswer chosen must be between 1 and 4: ")
