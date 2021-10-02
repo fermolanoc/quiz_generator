@@ -17,9 +17,8 @@ def main():
     menu_text = """
     1. Display categories
     2. Add new category
-    3. Add question to an existing category
-    4. Delete category 
-    5. Quit
+    3. Delete category 
+    4. Quit
     """
 
     while True:
@@ -33,9 +32,9 @@ def main():
                 print(item)
 
             topic = input("\nChoose a topic\n")
-            while topic not in categories_list:
+            while topic.capitalize() not in categories_list:
                 topic = input("\nChoose a topic\n")
-            questions_list = get_questions(topic)
+            questions_list = get_questions(topic.capitalize())
 
         # elif choice == '2':
         #     add_new_category()
@@ -48,7 +47,7 @@ def main():
         #         print(f'Player is not on our records\n')
         # elif choice == '4':
         #     delete_record()
-        elif choice == '5':
+        elif choice == '4':
             break
         else:
             print('Not a valid selection, please try again')

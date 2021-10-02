@@ -24,7 +24,7 @@ def get_questions(topic):
         print()
         print("Options:")
         print(
-            f"\t1) {question['answer_1']}\t2) {question['answer_2']}\t3) {question['answer_3']}\t4) {question['answer_4']}")
+            f"1) {question['answer_1']}\t2) {question['answer_2']}\t3) {question['answer_3']}\t4) {question['answer_4']}")
         user_answer = input("\nEnter number of option: ")
         try:
             user_answer_value = question[f'answer_{user_answer}']
