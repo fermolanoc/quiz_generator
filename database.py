@@ -1,5 +1,6 @@
 import sqlite3
 
 # Connect to DB and create cursor to execute queries
-conn = sqlite3.connect('./database/quizzes.db')
-cursor = conn.cursor()
+with sqlite3.connect('./database/quizzes.db') as conn:
+    conn.row_factory = sqlite3.Row  # Upgrade row_factory
+    cursor = conn.cursor()
