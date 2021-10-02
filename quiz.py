@@ -28,13 +28,14 @@ def main():
         if choice == '1':
             categories_list = display_all_categories()
 
-            print(categories_list)
+            # print(categories_list)
             for item in categories_list:
                 print(item)
 
-            # topic = input("\nChoose a topic\n")
-            # while topic not in categories_list:
-            #     topic = print("\nChoose a topic\n")
+            topic = input("\nChoose a topic\n")
+            while topic not in categories_list:
+                topic = input("\nChoose a topic\n")
+            questions_list = get_questions(topic)
 
         # elif choice == '2':
         #     add_new_category()
