@@ -1,24 +1,47 @@
-from db_manager import get_categories, get_topic_id, get_points
+from db_manager import get_topic_id, get_points, User
 
 
-def display_all_categories():
-    categories = get_categories()
+def get_user_info():
+    user_name = input("What is your name? ")
 
+    return User(user_name)
+
+
+def create_user(name):
+    user_id = User.create_user(name)
+
+    return user_id
+
+
+def show_all_categories(categories):
     print("\nLIST OF CATEGORIES\n")
     categories_list = []
     for category in categories:
         categories_list.append(category['name'])
 
-    return categories_list
+    for topic in categories_list:
+        print(topic)
+
+    topic = choose_category(categories_list)
+    return topic
 
 
-def get_questions(topic):
+def choose_category(list):
+    topic = input("\nChoose a topic\n")
+    while topic.capitalize() not in list:
+        topic = input("\nTopic not valid, try again\n")
+
+    return topic
+
+
+def get_questions(user, topic):
+
     total_points_available = 0
     total_points_obtained = 0
 
     questions_list = get_topic_id(topic)
 
-    print("\nQUESTIONS:\n")
+    print(f"\nQUESTIONS: \nOk {user} here are the questions:\n")
     for question in questions_list:
         difficulty, points_available = get_points(question['difficulty'])
         print(
@@ -48,3 +71,5 @@ def get_questions(topic):
 
         except ValueError as err:
             user_answer = input("\nAnswer chosen must be between 1 and 4: ")
+
+    return total_points_available, total_points_obtained
