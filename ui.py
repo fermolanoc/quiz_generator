@@ -1,5 +1,7 @@
+from typing import Match
 from db_manager import Category, get_points, User, Results
 import time
+import random
 
 
 def get_user_info():
@@ -62,6 +64,10 @@ def get_questions(user_id, user, topic):
 
     print(f"\nQUESTIONS: \nOk {user} here are the questions:\n")
     for question in questions_list:
+        # get a list with all 4 possible answers unordered
+        answers_list = get_possible_answers(
+            question['answer_1'], question['answer_2'], question['answer_3'], question['answer_4'])
+
         # for each question get id and current time
         question_id = question['id']
         timestamp = time.time()
@@ -84,7 +90,7 @@ def get_questions(user_id, user, topic):
         # show possible answers
         print("Options:")
         print(
-            f"1) {question['answer_1']}\t2) {question['answer_2']}\t3) {question['answer_3']}\t4) {question['answer_4']}")
+            f"1) {answers_list[0]}\t2) {answers_list[1]}\t3) {answers_list[2]}\t4) {answers_list[3]}")
 
         # ask user to choose an answer # based on 4 options
         user_answer = input("\nEnter number of answer: ")
@@ -101,7 +107,8 @@ def get_questions(user_id, user, topic):
                 # give user all points available on this question and increase total count of points obtained so far as well
                 question_points_obtained = points_available
                 total_points_obtained += points_available
-                print(f'That is Correct. {points_available} obtained\n\n')
+                print(
+                    f'That is Correct. {points_available} points obtained\n\n')
             else:
                 print(f"Wrong! Correct answer is {question['answer_1']}\n\n")
 
@@ -114,3 +121,26 @@ def get_questions(user_id, user, topic):
 
     # return how many points were available from all questions and how many user obtained
     return total_points_available, total_points_obtained
+
+
+def get_possible_answers(ans_1, ans_2, ans_3, ans_4):
+    answers_list = []
+    unordered_answers_list = []
+
+    answers_list.append(ans_1)
+    answers_list.append(ans_2)
+    answers_list.append(ans_3)
+    answers_list.append(ans_4)
+
+    # print(answers_list)
+    while len(answers_list) > 0:
+        # select randomly an answer from list
+        random_answer = random.choice(answers_list)
+
+        # create an unordered list with 4 possible answers
+        unordered_answers_list.append(random_answer)
+
+        # delete answer from original list
+        answers_list.remove(random_answer)
+
+    return unordered_answers_list
