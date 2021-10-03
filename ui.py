@@ -8,6 +8,8 @@ def get_user_info():
     # ask user to enter name
     user_name = input("What is your full name? ")
 
+    while user_name.isnumeric() or user_name.strip() == "":
+        user_name = input("Please enter your real full name? ")
     # Create an instance of User object with user name
     return User(user_name)
 
