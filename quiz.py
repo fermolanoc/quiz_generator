@@ -56,4 +56,5 @@ def get_questions(user_id, user_name, topic):
     print(f"{user_name.title()} you obtained {points_obtained} out of {points_available}")
 
 
-main()
+if __name__ == '__main__':
+    main()
