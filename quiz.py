@@ -16,29 +16,13 @@ from db_manager import User, Category
 
 def main():
 
-    menu_text = """
-    1. Play
-    2. Quit
-    """
+    print("------------------------ Choose a topic to take a quiz ------------------------")
 
-    while True:
-        print("------------------------ Menu ------------------------")
-        print(menu_text)
-        print("------------------------ Menu ------------------------")
+    topic = display_all_categories()  # get topic chosen by user
+    user_id, user_name = get_user_info()  # get user basic info
 
-        choice = input('Enter your choice number: ')
-
-        if choice == '1':
-            topic = display_all_categories()  # get topic chosen by user
-            user_id, user_name = get_user_info()  # get user basic info
-
-            # from the topic chosen by user, get questions available
-            get_questions(user_id, user_name.user_name, topic.capitalize())
-
-        elif choice == '2':
-            break
-        else:
-            print('Not a valid selection, please try again')
+    # from the topic chosen by user, get questions available
+    get_questions(user_id, user_name.user_name, topic.capitalize())
 
 
 def get_user_info():
