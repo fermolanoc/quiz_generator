@@ -102,7 +102,8 @@ def get_questions(user_id, user, topic):
                 user_answer = input(
                     "\nAnswer chosen must be between 1 and 4: ")
 
-            user_answer_value = question[f'answer_{user_answer}']
+            # print(answers_list[int(user_answer)-1])
+            user_answer_value = answers_list[int(user_answer)-1]
             print(f'Answer chosen: {user_answer_value}')
             if user_answer_value == question['answer_1']:
 
