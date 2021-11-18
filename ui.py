@@ -53,6 +53,9 @@ def choose_category(list):
 
 def get_questions(user_id, user, topic):
 
+    # There is a lot happening in this function - it should be broken into smaller, simpler parts
+    # writing meaningfum unit tests for this would be very difficult 
+
     timestamp = 0  # initialize current time on 0
 
     # this will save total amount of points available for user depending on # of questions on chosen topic
@@ -128,12 +131,17 @@ def get_questions(user_id, user, topic):
 
 def get_possible_answers(ans_1, ans_2, ans_3, ans_4):
     answers_list = []
-    unordered_answers_list = []
+    unordered_answers_list = []  
 
-    answers_list.append(ans_1)
-    answers_list.append(ans_2)
-    answers_list.append(ans_3)
-    answers_list.append(ans_4)
+    # answers_list.append(ans_1)
+    # answers_list.append(ans_2)
+    # answers_list.append(ans_3)
+    # answers_list.append(ans_4)
+
+    #  or 
+    answers_list = [ ans_1, ans_2, ans_3, ans_4]
+
+    # random.shuffle can do this for you, but nice to see you working through the logic 
 
     # print(answers_list)
     while len(answers_list) > 0:
