@@ -19,6 +19,9 @@ def main():
     print("------------------------ Choose a topic to take a quiz ------------------------")
 
     topic = display_all_categories()  # get topic chosen by user
+    # also query database to get number of questions available for that topic, and ask user
+    # to choose the number of questions they want to answer 
+    
     user_id, user_name = get_user_info()  # get user basic info
 
     # from the topic chosen by user, get questions available
@@ -39,14 +42,17 @@ def get_user_info():
     return user_id, user_name
 
 
-def display_all_categories():
+def display_all_categories():   # this displays and asks the user to choose the category - so a more specifc name is better 
+    # display_categories_get_user_choice() ? 
+
     # receives from DB an object with all categories
     categories = Category.get_categories()
 
-    user_choice = ui.show_all_categories(categories)
+    user_choice = ui.show_all_categories(categories)  # show_all_categories also asks for the choice, so use a more specifc name here too
     return user_choice
 
 
+# can you be more specific with this method name? This gets results? 
 def get_questions(user_id, user_name, topic):
     # receive how many points user earned and total points available, user id, user name and the category the user played
     points_available, points_obtained = ui.get_questions(

@@ -1,6 +1,6 @@
 import sqlite3
 
-db = './database/quizzes.db'
+db = './database/quizzes.db'  # works on my machine, fails on a PC. Always use os.path.join to join directories and files
 
 # Connect to DB and create cursor to execute queries
 with sqlite3.connect(db) as conn:
@@ -26,7 +26,10 @@ class User:
                 return user
         else:
             print(
-                f'User {user.user_name} not found. We\'ll create an account for you')
+                # does this method have any control over creating an account? The error 
+                # should relate to what specfically went wrong in this method
+                f'User {user.user_name} not found.')
+                # f'User {user.user_name} not found. We\'ll create an account for you')
             return None
 
     def create_user(user):
@@ -41,8 +44,12 @@ class User:
                 res = cursor.execute(
                     insert_sql, (user_name,))
                 new_id = res.lastrowid  # Get the ID of the new row in the table
-                user.id = new_id  # Set this book's ID
+                user.id = new_id  # Set this book's ID  # book?
         except sqlite3.IntegrityError as e:
+            # at least log or print the exception - all kinds of things
+            # can go wrong in the try block and you'll have no idea what happened if 
+            # all you see is "error"
+            # Also be consistent with single vs double quotes - pick one and use throughout 
             print("error")
         finally:
             cursor.close()
@@ -112,10 +119,14 @@ class Question:
                 cursor = conn.cursor()
 
                 questions = cursor.execute(
+                    # no format strings! use parameters! 
                     f'Select * from questions q inner join categories c on q.category_id = c.id where q.category_id = {topic_id}')
 
                 questions_list = []
                 for item in questions:
+
+                    # why not use an instance of the Question class to store all the question data? 
+                    # You've set the __init__ method up already
                     single_question = {}
                     question_id = item['id']
                     text = item['question']
